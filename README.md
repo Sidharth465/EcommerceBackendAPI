@@ -92,7 +92,9 @@ src/
 
 - Node.js (v16 or higher)
 - PostgreSQL (v12 or higher)
-- npm or yarn
+- **Yarn (v1.22.0 or higher)** - This project uses Yarn as the package manager
+
+> ⚠️ **Important**: This project is configured to use Yarn only. Using npm will cause errors.
 
 ### Setup Steps
 
@@ -106,7 +108,7 @@ src/
 2. **Install dependencies**
 
    ```bash
-   npm install
+   yarn install
    ```
 
 3. **Environment Configuration**
@@ -137,33 +139,42 @@ src/
 5. **Run Database Migrations**
 
    ```bash
-   npm run db:migrate:uat
+   yarn db:migrate:uat
    ```
 
 6. **Seed Database (Optional)**
 
    ```bash
-   npx sequelize-cli db:seed:all --env uat
+   yarn sequelize-cli db:seed:all --env uat
    ```
 
 7. **Start Development Server**
    ```bash
-   npm run nodemon:uat
+   yarn nodemon:uat
    ```
 
 ## 🔧 Available Scripts
 
 ```bash
 # Development
-npm run nodemon:uat          # Start development server (UAT environment)
-npm run nodemon:prod         # Start production server
+yarn nodemon:uat          # Start development server (UAT environment)
+yarn nodemon:prod         # Start production server
 
 # Database Management
-npm run db:migrate:uat       # Run migrations (UAT)
-npm run db:migrate:prod      # Run migrations (Production)
-npm run db:status:uat        # Check migration status (UAT)
-npm run db:undo:uat          # Undo last migration (UAT)
-npm run db:gen -- migration-name  # Generate new migration
+yarn db:migrate:uat       # Run migrations (UAT)
+yarn db:migrate:prod      # Run migrations (Production)
+yarn db:status:uat        # Check migration status (UAT)
+yarn db:undo:uat          # Undo last migration (UAT)
+yarn db:gen -- migration-name  # Generate new migration
+
+# Code Quality
+yarn lint                 # Run ESLint
+yarn lint:fix            # Fix ESLint issues
+yarn format              # Format code with Prettier
+yarn prettier:check      # Check Prettier formatting
+yarn type-check          # TypeScript type checking
+yarn check:lines         # Check file line counts
+yarn ci:check            # Run all CI checks locally
 ```
 
 ## 📊 Logging

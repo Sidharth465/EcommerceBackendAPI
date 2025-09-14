@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+// const { execSync } = require('child_process'); // Not used currently
 
 const MAX_LINES = 500;
 const EXTENSIONS = ['.ts', '.js'];
