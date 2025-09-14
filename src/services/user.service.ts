@@ -15,7 +15,8 @@ export interface CreateUserData {
 export interface UserResponse {
   id: string;
   email: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   role: string;
   createdAt: Date;
   updatedAt: Date;
@@ -42,11 +43,17 @@ export class UserService {
     // Hash the password
     const passwordHash = await bcrypt.hash(password, this.SALT_ROUNDS);
 
+    // Split name into first and last name
+    const nameParts = name.trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
     // Create the user
     const user = await models.User.create({
       email: email.toLowerCase(),
       passwordHash,
-      name: name.trim(),
+      firstName,
+      lastName,
       role,
     });
 
@@ -54,7 +61,8 @@ export class UserService {
     return {
       id: user.getDataValue('id'),
       email: user.getDataValue('email'),
-      name: user.getDataValue('name'),
+      firstName: user.getDataValue('firstName'),
+      lastName: user.getDataValue('lastName'),
       role: user.getDataValue('role'),
       createdAt: user.getDataValue('createdAt'),
       updatedAt: user.getDataValue('updatedAt'),
