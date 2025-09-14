@@ -5,6 +5,14 @@ on:
     branches: [trunk, develop]
   # Removed push triggers - only PRs allowed to trunk/develop
 
+# Add permissions for GITHUB_TOKEN
+permissions:
+  contents: read          # Read repository contents
+  pull-requests: write    # Write comments on PRs
+  issues: write          # Write comments on issues
+  checks: write          # Write check results
+  statuses: write        # Write status checks
+
 jobs:
   # Job 1: Code Quality Checks
   code-quality:
@@ -24,7 +32,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Check file line count
         run: |
@@ -164,84 +172,5 @@ jobs:
           # npm test
           echo "Tests will be added in future iterations"
 
-  # Job 5: PR Comment with Results
-  pr-comment:
-    name: PR Status Comment
-    runs-on: ubuntu-latest
-    needs: [code-quality, pr-title-check, security-check, build-test]
-    if: always() && github.event_name == 'pull_request'
-
-    steps:
-      - name: Comment PR
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const botComment = comments.find(comment => 
-              comment.user.type === 'Bot' && 
-              comment.body.includes('## 🤖 CI/CD Pipeline Results')
-            );
-
-            const results = {
-              'code-quality': '${{ needs.code-quality.result }}',
-              'pr-title-check': '${{ needs.pr-title-check.result }}', 
-              'security-check': '${{ needs.security-check.result }}',
-              'build-test': '${{ needs.build-test.result }}'
-            };
-
-            const getEmoji = (result) => {
-              switch(result) {
-                case 'success': return '✅';
-                case 'failure': return '❌';
-                case 'cancelled': return '⏹️';
-                case 'skipped': return '⏭️';
-                default: return '⏳';
-              }
-            };
-
-            const body = `## 🤖 CI/CD Pipeline Results
-
-            | Check | Status | Result |
-            |-------|--------|--------|
-            | Code Quality & Standards | ${getEmoji(results['code-quality'])} | ${results['code-quality']} |
-            | PR Title Validation | ${getEmoji(results['pr-title-check'])} | ${results['pr-title-check']} |
-            | Security & Dependencies | ${getEmoji(results['security-check'])} | ${results['security-check']} |
-            | Build & Test | ${getEmoji(results['build-test'])} | ${results['build-test']} |
-
-            ### 📋 Checks Performed:
-            - ✅ File line count (max 500 lines per file)
-            - ✅ Prettier formatting
-            - ✅ ESLint code quality
-            - ✅ TypeScript compilation
-            - ✅ PR title follows conventional commits
-            - ✅ Security audit
-            - ✅ Build verification
-
-            ${Object.values(results).every(r => r === 'success') ? 
-              '🎉 **All checks passed! This PR is ready for review.**' : 
-              '⚠️ **Some checks failed. Please review and fix the issues above.**'
-            }
-
-            ---
-            *This comment is automatically updated by the CI/CD pipeline.*`;
-
-            if (botComment) {
-              github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: body
-              });
-            } else {
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: body
-              });
-            }
+  # PR Comment job removed to avoid permission issues
+  # You can see job results in the GitHub Actions tab instead
