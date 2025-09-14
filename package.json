@@ -4,7 +4,7 @@
   "main": "index.js",
   "packageManager": "yarn@1.22.22",
   "engines": {
-    "node": ">=16.0.0",
+    "node": ">=20.0.0",
     "yarn": ">=1.22.0",
     "npm": "please-use-yarn"
   },
@@ -19,7 +19,8 @@
     "db:migrate:prod": "NODE_ENV=production npx sequelize-cli db:migrate",
     "db:status:prod": "NODE_ENV=production npx sequelize-cli db:migrate:status",
     "db:gen": "npx sequelize-cli migration:generate --name",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 10",
+    "lint:strict": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "prettier:check": "prettier --check .",
