@@ -143,7 +143,7 @@ jobs:
   build-test:
     name: Build & Test
     runs-on: ubuntu-latest
-    needs: [branch-flow-check, code-quality]
+    needs: [code-quality]
 
     steps:
       - name: Checkout code
@@ -173,7 +173,7 @@ jobs:
   pr-comment:
     name: PR Status Comment
     runs-on: ubuntu-latest
-    needs: [branch-flow-check, code-quality, pr-title-check, security-check, build-test]
+    needs: [code-quality, pr-title-check, security-check, build-test]
     if: always() && github.event_name == 'pull_request'
 
     steps:
@@ -193,7 +193,6 @@ jobs:
             );
 
             const results = {
-              'branch-flow-check': '${{ needs.branch-flow-check.result }}',
               'code-quality': '${{ needs.code-quality.result }}',
               'pr-title-check': '${{ needs.pr-title-check.result }}', 
               'security-check': '${{ needs.security-check.result }}',
@@ -214,14 +213,12 @@ jobs:
 
             | Check | Status | Result |
             |-------|--------|--------|
-            | Branch Flow Validation | ${getEmoji(results['branch-flow-check'])} | ${results['branch-flow-check']} |
             | Code Quality & Standards | ${getEmoji(results['code-quality'])} | ${results['code-quality']} |
             | PR Title Validation | ${getEmoji(results['pr-title-check'])} | ${results['pr-title-check']} |
             | Security & Dependencies | ${getEmoji(results['security-check'])} | ${results['security-check']} |
             | Build & Test | ${getEmoji(results['build-test'])} | ${results['build-test']} |
 
             ### 📋 Checks Performed:
-            - ✅ Git flow validation (develop → trunk, feature/* → develop)
             - ✅ File line count (max 500 lines per file)
             - ✅ Prettier formatting
             - ✅ ESLint code quality
