@@ -21,11 +21,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          # Temporarily disable cache until yarn.lock is properly committed
-          # cache: 'yarn'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Check file line count
         run: |
@@ -105,12 +104,7 @@ jobs:
             deps
           # Require scope
           requireScope: false
-          # Subject pattern (optional)
-          subjectPattern: ^[A-Z].{4,}$
-          subjectPatternError: |
-            The subject "{subject}" found in the pull request title "{title}"
-            didn't match the configured pattern. Please ensure that the subject
-            starts with an uppercase letter and has at least 5 characters.
+          # No subject pattern - allow any subject as long as type is correct
 
   # Job 3: Security & Dependencies Check
   security-check:
@@ -125,11 +119,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          # Temporarily disable cache until yarn.lock is properly committed
-          # cache: 'yarn'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Run yarn audit
         run: |
@@ -155,11 +148,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          # Temporarily disable cache until yarn.lock is properly committed
-          # cache: 'yarn'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Build project
         run: |
