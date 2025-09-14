@@ -1,8 +1,8 @@
-import { DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Sequelize } from 'sequelize';
 
 export const defineCategoryModel = (sequelize: Sequelize) => {
   const Category = sequelize.define(
-    "Category",
+    'Category',
     {
       id: {
         type: DataTypes.UUID,
@@ -28,19 +28,19 @@ export const defineCategoryModel = (sequelize: Sequelize) => {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
-        field: "is_active",
+        field: 'is_active',
       },
     },
     {
-      tableName: "categories",
+      tableName: 'categories',
       paranoid: true,
       underscored: true,
       indexes: [
-        { fields: ["name"], unique: true },
-        { fields: ["slug"], unique: true },
-        { fields: ["is_active"] },
+        { fields: ['name'], unique: true },
+        { fields: ['slug'], unique: true },
+        { fields: ['is_active'] },
       ],
-    }
+    },
   );
 
   return Category;

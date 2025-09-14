@@ -1,8 +1,8 @@
-import { DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Sequelize } from 'sequelize';
 
 export const defineUserModel = (sequelize: Sequelize) => {
   const User = sequelize.define(
-    "User",
+    'User',
     {
       id: {
         type: DataTypes.UUID,
@@ -19,7 +19,7 @@ export const defineUserModel = (sequelize: Sequelize) => {
       passwordHash: {
         type: DataTypes.STRING(255),
         allowNull: false,
-        field: "password_hash",
+        field: 'password_hash',
       },
       name: {
         type: DataTypes.STRING(255),
@@ -28,21 +28,21 @@ export const defineUserModel = (sequelize: Sequelize) => {
       role: {
         type: DataTypes.STRING(32),
         allowNull: false,
-        defaultValue: "customer",
+        defaultValue: 'customer',
       },
       deletedAt: {
         type: DataTypes.DATE,
         allowNull: true,
-        field: "deleted_at",
+        field: 'deleted_at',
       },
     },
     {
-      tableName: "users",
+      tableName: 'users',
       paranoid: true,
-      indexes: [{ unique: true, fields: ["email"] }],
+      indexes: [{ unique: true, fields: ['email'] }],
       underscored: true,
       timestamps: true,
-    }
+    },
   );
 
   return User;

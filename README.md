@@ -220,7 +220,6 @@ grep " [45][0-9][0-9] " logs/access.log
 ### Common Issues
 
 1. **Database Connection Failed**
-
    - Check PostgreSQL is running
    - Verify database credentials in `.env` file
    - Ensure database exists

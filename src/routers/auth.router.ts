@@ -1,7 +1,7 @@
-import { Router } from "express";
-import { AuthController } from "../controllers/auth.controller";
-import { validateRequest } from "../middlewares/validation.middleware";
-import { registerSchema, loginSchema } from "../validators/auth.validator";
+import { Router } from 'express';
+import { AuthController } from '../controllers/auth.controller';
+import { validateRequest } from '../middlewares/validation.middleware';
+import { registerSchema, loginSchema } from '../validators/auth.validator';
 
 const router = Router();
 
@@ -10,17 +10,13 @@ const router = Router();
  * @desc Register a new user
  * @access Public
  */
-router.post(
-  "/register",
-  validateRequest(registerSchema),
-  AuthController.register
-);
+router.post('/register', validateRequest(registerSchema), AuthController.register);
 
 /**
  * @route POST /api/v1/auth/login
  * @desc Login user
  * @access Public
  */
-router.post("/login", validateRequest(loginSchema), AuthController.login);
+router.post('/login', validateRequest(loginSchema), AuthController.login);
 
 export default router;

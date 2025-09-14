@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4 } = require('uuid');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -9,8 +9,8 @@ module.exports = {
       {
         id: uuidv4(),
         name: "Men's Clothing",
-        slug: "mens-clothing",
-        description: "Clothing and apparel for men",
+        slug: 'mens-clothing',
+        description: 'Clothing and apparel for men',
         is_active: true,
         created_at: new Date(),
         updated_at: new Date(),
@@ -18,36 +18,36 @@ module.exports = {
       {
         id: uuidv4(),
         name: "Women's Clothing",
-        slug: "womens-clothing",
-        description: "Clothing and apparel for women",
+        slug: 'womens-clothing',
+        description: 'Clothing and apparel for women',
         is_active: true,
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
         id: uuidv4(),
-        name: "Jewelery",
-        slug: "jewelery",
-        description: "Jewelry and accessories",
+        name: 'Jewelery',
+        slug: 'jewelery',
+        description: 'Jewelry and accessories',
         is_active: true,
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
         id: uuidv4(),
-        name: "Electronics",
-        slug: "electronics",
-        description: "Electronic devices and gadgets",
+        name: 'Electronics',
+        slug: 'electronics',
+        description: 'Electronic devices and gadgets',
         is_active: true,
         created_at: new Date(),
         updated_at: new Date(),
       },
     ];
 
-    await queryInterface.bulkInsert("categories", categories, {});
+    await queryInterface.bulkInsert('categories', categories, {});
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("categories", null, {});
+    await queryInterface.bulkDelete('categories', null, {});
   },
 };

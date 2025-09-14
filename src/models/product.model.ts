@@ -1,8 +1,8 @@
-import { DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Sequelize } from 'sequelize';
 
 export const defineProductModel = (sequelize: Sequelize) => {
   const Product = sequelize.define(
-    "Product",
+    'Product',
     {
       id: {
         type: DataTypes.UUID,
@@ -30,17 +30,17 @@ export const defineProductModel = (sequelize: Sequelize) => {
       categoryId: {
         type: DataTypes.UUID,
         allowNull: false,
-        field: "category_id",
+        field: 'category_id',
       },
       imageUrl: {
         type: DataTypes.STRING(1000),
         allowNull: true,
-        field: "image_url",
+        field: 'image_url',
       },
       ratingRate: {
         type: DataTypes.DECIMAL(3, 2),
         allowNull: true,
-        field: "rating_rate",
+        field: 'rating_rate',
         validate: {
           min: 0,
           max: 5,
@@ -50,34 +50,34 @@ export const defineProductModel = (sequelize: Sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: 0,
-        field: "rating_count",
+        field: 'rating_count',
       },
       stockQuantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        field: "stock_quantity",
+        field: 'stock_quantity',
       },
       isActive: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
-        field: "is_active",
+        field: 'is_active',
       },
     },
     {
-      tableName: "products",
+      tableName: 'products',
       paranoid: true,
       underscored: true,
       indexes: [
-        { fields: ["title"] },
-        { fields: ["slug"], unique: true },
-        { fields: ["category_id"] },
-        { fields: ["price"] },
-        { fields: ["rating_rate"] },
-        { fields: ["is_active"] },
+        { fields: ['title'] },
+        { fields: ['slug'], unique: true },
+        { fields: ['category_id'] },
+        { fields: ['price'] },
+        { fields: ['rating_rate'] },
+        { fields: ['is_active'] },
       ],
-    }
+    },
   );
 
   return Product;

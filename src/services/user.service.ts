@@ -1,6 +1,6 @@
-import bcrypt from "bcrypt";
-import { sequelize } from "../configs/database";
-import { initModels } from "../models";
+import bcrypt from 'bcrypt';
+import { sequelize } from '../configs/database';
+import { initModels } from '../models';
 
 // Initialize models
 const models = initModels(sequelize);
@@ -28,7 +28,7 @@ export class UserService {
    * Register a new user
    */
   static async registerUser(userData: CreateUserData): Promise<UserResponse> {
-    const { email, password, name, role = "customer" } = userData;
+    const { email, password, name, role = 'customer' } = userData;
 
     // Check if user already exists
     const existingUser = await models.User.findOne({
@@ -36,7 +36,7 @@ export class UserService {
     });
 
     if (existingUser) {
-      throw new Error("User with this email already exists");
+      throw new Error('User with this email already exists');
     }
 
     // Hash the password
@@ -52,12 +52,12 @@ export class UserService {
 
     // Return user data without password
     return {
-      id: user.getDataValue("id"),
-      email: user.getDataValue("email"),
-      name: user.getDataValue("name"),
-      role: user.getDataValue("role"),
-      createdAt: user.getDataValue("createdAt"),
-      updatedAt: user.getDataValue("updatedAt"),
+      id: user.getDataValue('id'),
+      email: user.getDataValue('email'),
+      name: user.getDataValue('name'),
+      role: user.getDataValue('role'),
+      createdAt: user.getDataValue('createdAt'),
+      updatedAt: user.getDataValue('updatedAt'),
     };
   }
 
@@ -80,10 +80,7 @@ export class UserService {
   /**
    * Verify password
    */
-  static async verifyPassword(
-    plainPassword: string,
-    hashedPassword: string
-  ): Promise<boolean> {
+  static async verifyPassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
     return await bcrypt.compare(plainPassword, hashedPassword);
   }
 }

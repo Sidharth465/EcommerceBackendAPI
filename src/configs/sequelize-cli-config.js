@@ -1,8 +1,8 @@
 // src/config/sequelize-cli-config.js
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV || "local"}` });
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'local'}` });
 
 const common = {
-  dialect: "postgres",
+  dialect: 'postgres',
   logging: false,
 };
 

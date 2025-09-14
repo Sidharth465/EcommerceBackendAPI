@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { UserService, CreateUserData } from "../services/user.service";
+import { Request, Response } from 'express';
+import { UserService, CreateUserData } from '../services/user.service';
 
 export class AuthController {
   /**
@@ -13,7 +13,7 @@ export class AuthController {
 
       res.status(201).json({
         success: true,
-        message: "User registered successfully",
+        message: 'User registered successfully',
         data: {
           user,
         },
@@ -21,7 +21,7 @@ export class AuthController {
     } catch (error) {
       // Handle known errors
       if (error instanceof Error) {
-        if (error.message === "User with this email already exists") {
+        if (error.message === 'User with this email already exists') {
           return res.status(409).json({
             success: false,
             message: error.message,
@@ -30,10 +30,10 @@ export class AuthController {
       }
 
       // Handle unexpected errors
-      console.error("Registration error:", error);
+      console.error('Registration error:', error);
       res.status(500).json({
         success: false,
-        message: "Internal server error",
+        message: 'Internal server error',
       });
     }
   }
@@ -46,13 +46,13 @@ export class AuthController {
       // TODO: Implement login logic
       res.status(501).json({
         success: false,
-        message: "Login endpoint not implemented yet",
+        message: 'Login endpoint not implemented yet',
       });
     } catch (error) {
-      console.error("Login error:", error);
+      console.error('Login error:', error);
       res.status(500).json({
         success: false,
-        message: "Internal server error",
+        message: 'Internal server error',
       });
     }
   }

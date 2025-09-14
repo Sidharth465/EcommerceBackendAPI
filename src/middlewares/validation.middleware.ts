@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import Joi from "joi";
+import { Request, Response, NextFunction } from 'express';
+import Joi from 'joi';
 
 export interface ValidationError {
   field: string;
@@ -15,16 +15,14 @@ export const validateRequest = (schema: Joi.ObjectSchema) => {
     });
 
     if (error) {
-      const validationErrors: ValidationError[] = error.details.map(
-        (detail) => ({
-          field: detail.path.join("."),
-          message: detail.message,
-        })
-      );
+      const validationErrors: ValidationError[] = error.details.map((detail) => ({
+        field: detail.path.join('.'),
+        message: detail.message,
+      }));
 
       return res.status(400).json({
         success: false,
-        message: "Validation failed",
+        message: 'Validation failed',
         errors: validationErrors,
       });
     }

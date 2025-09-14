@@ -1,4 +1,4 @@
-import { env, NodeEnv } from "./env";
+import { env, NodeEnv } from './env';
 
 export type AppConfig = {
   nodeEnv: NodeEnv;
@@ -22,8 +22,8 @@ export type AppConfig = {
 export const config: AppConfig = {
   nodeEnv: env.nodeEnv,
 
-  isUat: env.nodeEnv === "uat",
-  isProd: env.nodeEnv === "production",
+  isUat: env.nodeEnv === 'uat',
+  isProd: env.nodeEnv === 'production',
   port: env.port,
   corsAllowedOrigins: env.coarsAllowOrigin,
   logLevel: env.logLevel,

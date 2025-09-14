@@ -1,0 +1,253 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  # Job 1: Code Quality Checks
+  code-quality:
+    name: Code Quality & Standards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check file line count
+        run: |
+          echo "🔍 Checking file line counts (max 500 lines)..."
+          failed=false
+
+          # Check all TypeScript and JavaScript files
+          find src -name "*.ts" -o -name "*.js" | while read file; do
+            lines=$(wc -l < "$file")
+            if [ "$lines" -gt 500 ]; then
+              echo "❌ $file has $lines lines (exceeds 500 line limit)"
+              failed=true
+            else
+              echo "✅ $file: $lines lines (OK)"
+            fi
+          done
+
+          # Check if any file failed
+          if find src -name "*.ts" -o -name "*.js" | xargs wc -l | awk '$1 > 500 {print $2 " has " $1 " lines (exceeds 500)"; exit 1}'; then
+            echo "❌ Some files exceed the 500 line limit"
+            exit 1
+          else
+            echo "✅ All files are within the 500 line limit"
+          fi
+
+      - name: Run Prettier check
+        run: |
+          echo "🎨 Checking code formatting with Prettier..."
+          npm run prettier:check
+        continue-on-error: false
+
+      - name: Run ESLint
+        run: |
+          echo "🔍 Running ESLint checks..."
+          npm run lint
+        continue-on-error: false
+
+      - name: Run TypeScript compilation check
+        run: |
+          echo "🔧 Checking TypeScript compilation..."
+          npx tsc --noEmit
+
+  # Job 2: PR Title Validation
+  pr-title-check:
+    name: PR Title Validation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Validate PR Title
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Allowed types based on conventional commits
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            chore
+            ci
+            build
+          # Allowed scopes (optional)
+          scopes: |
+            auth
+            user
+            product
+            order
+            payment
+            api
+            db
+            config
+            deps
+          # Require scope
+          requireScope: false
+          # Subject pattern (optional)
+          subjectPattern: ^[A-Z].{4,}$
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title "{title}"
+            didn't match the configured pattern. Please ensure that the subject
+            starts with an uppercase letter and has at least 5 characters.
+
+  # Job 3: Security & Dependencies Check
+  security-check:
+    name: Security & Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: |
+          echo "🔒 Running security audit..."
+          npm audit --audit-level=moderate
+
+      - name: Check for outdated dependencies
+        run: |
+          echo "📦 Checking for outdated dependencies..."
+          npm outdated || true
+
+  # Job 4: Build Test
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    needs: [code-quality]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: |
+          echo "🏗️ Building TypeScript project..."
+          npx tsc
+
+      - name: Run tests (when available)
+        run: |
+          echo "🧪 Running tests..."
+          # npm test
+          echo "Tests will be added in future iterations"
+
+  # Job 5: PR Comment with Results
+  pr-comment:
+    name: PR Status Comment
+    runs-on: ubuntu-latest
+    needs: [code-quality, pr-title-check, security-check, build-test]
+    if: always() && github.event_name == 'pull_request'
+
+    steps:
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('## 🤖 CI/CD Pipeline Results')
+            );
+
+            const results = {
+              'code-quality': '${{ needs.code-quality.result }}',
+              'pr-title-check': '${{ needs.pr-title-check.result }}', 
+              'security-check': '${{ needs.security-check.result }}',
+              'build-test': '${{ needs.build-test.result }}'
+            };
+
+            const getEmoji = (result) => {
+              switch(result) {
+                case 'success': return '✅';
+                case 'failure': return '❌';
+                case 'cancelled': return '⏹️';
+                case 'skipped': return '⏭️';
+                default: return '⏳';
+              }
+            };
+
+            const body = `## 🤖 CI/CD Pipeline Results
+
+            | Check | Status | Result |
+            |-------|--------|--------|
+            | Code Quality & Standards | ${getEmoji(results['code-quality'])} | ${results['code-quality']} |
+            | PR Title Validation | ${getEmoji(results['pr-title-check'])} | ${results['pr-title-check']} |
+            | Security & Dependencies | ${getEmoji(results['security-check'])} | ${results['security-check']} |
+            | Build & Test | ${getEmoji(results['build-test'])} | ${results['build-test']} |
+
+            ### 📋 Checks Performed:
+            - ✅ File line count (max 500 lines per file)
+            - ✅ Prettier formatting
+            - ✅ ESLint code quality
+            - ✅ TypeScript compilation
+            - ✅ PR title follows conventional commits
+            - ✅ Security audit
+            - ✅ Build verification
+
+            ${Object.values(results).every(r => r === 'success') ? 
+              '🎉 **All checks passed! This PR is ready for review.**' : 
+              '⚠️ **Some checks failed. Please review and fix the issues above.**'
+            }
+
+            ---
+            *This comment is automatically updated by the CI/CD pipeline.*`;
+
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }

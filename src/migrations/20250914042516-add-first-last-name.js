@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   // up
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn("users", "first_name", {
+    await queryInterface.addColumn('users', 'first_name', {
       type: Sequelize.STRING(255),
       allowNull: true,
     });
-    await queryInterface.addColumn("users", "last_name", {
+    await queryInterface.addColumn('users', 'last_name', {
       type: Sequelize.STRING(255),
       allowNull: true,
     });
@@ -20,12 +20,12 @@ module.exports = {
       WHERE name IS NOT NULL
         AND (first_name IS NULL OR last_name IS NULL);
     `);
-    await queryInterface.removeColumn("users", "name");
+    await queryInterface.removeColumn('users', 'name');
   },
 
   // down
   async down(queryInterface, Sequelize) {
-    await queryInterface.addColumn("users", "name", {
+    await queryInterface.addColumn('users', 'name', {
       type: Sequelize.STRING(255),
       allowNull: true,
     });
@@ -37,7 +37,7 @@ module.exports = {
       )
       WHERE name IS NULL;
     `);
-    await queryInterface.removeColumn("users", "first_name");
-    await queryInterface.removeColumn("users", "last_name");
+    await queryInterface.removeColumn('users', 'first_name');
+    await queryInterface.removeColumn('users', 'last_name');
   },
 };
