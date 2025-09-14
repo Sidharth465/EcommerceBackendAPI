@@ -11,7 +11,7 @@ const path = require('path');
 function checkPackageManager() {
   // Check if this script is being run by npm
   const userAgent = process.env.npm_config_user_agent;
-  
+
   if (userAgent && userAgent.startsWith('npm')) {
     console.error('🚫 ERROR: This project uses Yarn as the package manager.');
     console.error('');
