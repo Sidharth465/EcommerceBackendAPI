@@ -5,7 +5,7 @@
  * This runs before any install command
  */
 
-const { execSync } = require('child_process');
+// const { execSync } = require('child_process'); // Not used currently
 const path = require('path');
 
 function checkPackageManager() {
