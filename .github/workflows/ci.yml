@@ -26,7 +26,7 @@ jobs:
       - name: Check file line count
         run: |
           echo "🔍 Checking file line counts (max 500 lines)..."
-          
+
           # Check all TypeScript and JavaScript files
           find src -name "*.ts" -o -name "*.js" | while read file; do
             lines=$(wc -l < "$file")
