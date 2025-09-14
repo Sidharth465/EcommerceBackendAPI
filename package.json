@@ -2,7 +2,14 @@
   "name": "e-com-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=16.0.0",
+    "yarn": ">=1.22.0",
+    "npm": "please-use-yarn"
+  },
   "scripts": {
+    "preinstall": "npx only-allow yarn",
     "test": "echo \"Error: no test specified\" && exit 1",
     "nodemon:uat": "NODE_ENV=uat ts-node-dev --respawn --transpile-only src/server.ts",
     "nodemon:prod": "NODE_ENV=production ts-node-dev --respawn --transpile-only src/server.ts",
@@ -19,7 +26,8 @@
     "type-check": "tsc --noEmit",
     "build": "tsc",
     "check:lines": "node scripts/check-line-count.js",
-    "ci:check": "npm run check:lines && npm run prettier:check && npm run lint && npm run type-check"
+    "check:package-manager": "node scripts/check-package-manager.js",
+    "ci:check": "yarn check:lines && yarn prettier:check && yarn lint && yarn type-check"
   },
   "keywords": [],
   "author": "",
