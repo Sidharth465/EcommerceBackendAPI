@@ -21,10 +21,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'yarn'
+          # Temporarily disable cache until yarn.lock is properly committed
+          # cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Check file line count
         run: |
@@ -124,10 +125,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'yarn'
+          # Temporarily disable cache until yarn.lock is properly committed
+          # cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Run yarn audit
         run: |
@@ -153,10 +155,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'yarn'
+          # Temporarily disable cache until yarn.lock is properly committed
+          # cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Build project
         run: |
