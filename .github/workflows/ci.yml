@@ -7,44 +7,31 @@ on:
 
 # Add permissions for GITHUB_TOKEN
 permissions:
-  contents: read          # Read repository contents
-  pull-requests: write    # Write comments on PRs
-  issues: write          # Write comments on issues
-  checks: write          # Write check results
-  statuses: write        # Write status checks
+  contents: read # Read repository contents
+  pull-requests: write # Write comments on PRs
+  issues: write # Write comments on issues
+  checks: write # Write check results
+  statuses: write # Write status checks
 
 jobs:
-  # Job 1: Code Quality Checks
-  code-quality:
-    name: Code Quality & Standards
+  # Job 1: Basic Checks (No Dependencies)
+  basic-checks:
+    name: Basic Code Checks
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install
 
       - name: Check file line count
         run: |
           echo "🔍 Checking file line counts (max 500 lines)..."
-          failed=false
-
+          
           # Check all TypeScript and JavaScript files
           find src -name "*.ts" -o -name "*.js" | while read file; do
             lines=$(wc -l < "$file")
             if [ "$lines" -gt 500 ]; then
               echo "❌ $file has $lines lines (exceeds 500 line limit)"
-              failed=true
             else
               echo "✅ $file: $lines lines (OK)"
             fi
@@ -57,6 +44,24 @@ jobs:
           else
             echo "✅ All files are within the 500 line limit"
           fi
+
+  # Job 2: Code Quality (Requires Dependencies)
+  code-quality:
+    name: Code Quality & Standards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install
 
       - name: Run Prettier check
         run: |
@@ -75,7 +80,7 @@ jobs:
           echo "🔧 Checking TypeScript compilation..."
           npx tsc --noEmit
 
-  # Job 2: PR Title Validation
+  # Job 3: PR Title Validation (No Dependencies)
   pr-title-check:
     name: PR Title Validation
     runs-on: ubuntu-latest
@@ -114,7 +119,7 @@ jobs:
           requireScope: false
           # No subject pattern - allow any subject as long as type is correct
 
-  # Job 3: Security & Dependencies Check
+  # Job 4: Security & Dependencies (Requires Dependencies)
   security-check:
     name: Security & Dependencies
     runs-on: ubuntu-latest
@@ -142,11 +147,11 @@ jobs:
           echo "📦 Checking for outdated dependencies..."
           yarn outdated || true
 
-  # Job 4: Build Test
+  # Job 5: Build Test (Requires Dependencies)
   build-test:
     name: Build & Test
     runs-on: ubuntu-latest
-    needs: [code-quality]
+    needs: [basic-checks, code-quality]
 
     steps:
       - name: Checkout code
