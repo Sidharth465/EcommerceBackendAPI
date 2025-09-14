@@ -7,6 +7,11 @@ export interface JwtPayload {
   email: string;
   role: string;
   tokenType: 'access' | 'refresh';
+  exp?: number; // Expiration timestamp (Unix time)
+  iat?: number; // Issued at timestamp (Unix time)
+  iss?: string; // Issuer
+  aud?: string; // Audience
+  jti?: string; // JWT ID (used for refresh tokens)
 }
 
 export interface TokenPair {

@@ -45,7 +45,7 @@ export const serverSideAuthMiddleware = async (req: Request, res: Response, next
 
       // Check if token expires soon (within 2 minutes) - proactive refresh
       const currentTime = Math.floor(Date.now() / 1000);
-      const timeUntilExpiry = decoded.exp - currentTime;
+      const timeUntilExpiry = decoded.exp! - currentTime;
 
       if (timeUntilExpiry < 2 * 60) {
         // Less than 2 minutes
