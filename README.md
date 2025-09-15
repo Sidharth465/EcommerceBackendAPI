@@ -261,7 +261,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Sidharth Verma**
 
 - GitHub: [@sidharthverma](https://github.com/sidharthverma)
-- Email: your.email@example.com
+- Email: siddharthverma465@gmail.com
 
 ## 🙏 Acknowledgments
 
