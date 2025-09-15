@@ -21,9 +21,15 @@ export const defineUserModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: 'password_hash',
       },
-      name: {
+      firstName: {
         type: DataTypes.STRING(255),
         allowNull: true,
+        field: 'first_name',
+      },
+      lastName: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        field: 'last_name',
       },
       role: {
         type: DataTypes.STRING(32),
