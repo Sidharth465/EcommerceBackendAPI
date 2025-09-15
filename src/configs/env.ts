@@ -31,4 +31,10 @@ export const env = {
   logger: {
     level: process.env.LOG_LEVEL || 'info',
   },
+  jwt: {
+    accessTokenSecret: process.env.JWT_ACCESS_SECRET || 'dev-access-secret-change-in-production',
+    refreshTokenSecret: process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-change-in-production',
+    accessTokenExpiry: process.env.JWT_ACCESS_EXPIRES_IN || '15m',
+    refreshTokenExpiry: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
+  },
 };

@@ -2,7 +2,14 @@
   "name": "e-com-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=20.0.0",
+    "yarn": ">=1.22.0",
+    "npm": "please-use-yarn"
+  },
   "scripts": {
+    "preinstall": "npx only-allow yarn",
     "test": "echo \"Error: no test specified\" && exit 1",
     "nodemon:uat": "NODE_ENV=uat ts-node-dev --respawn --transpile-only src/server.ts",
     "nodemon:prod": "NODE_ENV=production ts-node-dev --respawn --transpile-only src/server.ts",
@@ -12,14 +19,16 @@
     "db:migrate:prod": "NODE_ENV=production npx sequelize-cli db:migrate",
     "db:status:prod": "NODE_ENV=production npx sequelize-cli db:migrate:status",
     "db:gen": "npx sequelize-cli migration:generate --name",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 10",
+    "lint:strict": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "prettier:check": "prettier --check .",
     "type-check": "tsc --noEmit",
     "build": "tsc",
     "check:lines": "node scripts/check-line-count.js",
-    "ci:check": "npm run check:lines && npm run prettier:check && npm run lint && npm run type-check"
+    "check:package-manager": "node scripts/check-package-manager.js",
+    "ci:check": "yarn check:lines && yarn prettier:check && yarn lint && yarn type-check"
   },
   "keywords": [],
   "author": "",
@@ -27,12 +36,14 @@
   "description": "",
   "dependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "9.0.10",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "joi": "^18.0.1",
+    "jsonwebtoken": "9.0.2",
     "morgan": "^1.10.1",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",

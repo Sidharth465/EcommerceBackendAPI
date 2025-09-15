@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(qi, Sequelize) {
+  async up(qi) {
     // up
 
     await qi.renameColumn('refresh_tokens', 'createdAt', 'created_at');
@@ -16,7 +16,7 @@ module.exports = {
      */
   },
 
-  async down(qi, Sequelize) {
+  async down(qi) {
     // down
 
     await qi.renameColumn('refresh_tokens', 'created_at', 'createdAt');
