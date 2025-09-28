@@ -3,22 +3,34 @@ import { UserService, CreateUserData } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { RefreshTokenService } from '../services/refreshToken.service';
 import { env } from '../configs/env';
+import { WalletService } from '../services/wallet.service';
+import { sequelize } from '../configs/database';
+
 
 export class AuthController {
   /**
    * Register a new user
    */
   static async register(req: Request, res: Response) {
+    const Transaction = await sequelize.transaction()
     try {
-      const userData: CreateUserData = req.body;
-      const user = await UserService.registerUser(userData);
 
+      const userData: CreateUserData = req.body;
+      console.log("userData",userData)
+      const user = await UserService.registerUser(userData,Transaction);
+
+    const wallet=await WalletService.createWallet(user.id,{amount:0},Transaction)
+    console.log("wallet",JSON.stringify(wallet))
+    await Transaction.commit()
       res.status(201).json({
         success: true,
         message: 'User registered successfully',
         data: { user },
       });
     } catch (error) {
+
+      await Transaction.rollback()
+
       // Handle known errors
       if (error instanceof Error) {
         if (error.message === 'User with this email already exists') {

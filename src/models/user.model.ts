@@ -10,6 +10,7 @@ export const defineUserModel = (sequelize: Sequelize) => {
         primaryKey: true,
         allowNull: false,
       },
+      
       email: {
         type: DataTypes.STRING(255),
         allowNull: false,

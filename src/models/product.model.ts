@@ -29,6 +29,10 @@ export const defineProductModel = (sequelize: Sequelize) => {
       },
       categoryId: {
         type: DataTypes.UUID,
+        references: {
+          model: 'categories',
+          key: 'id',
+        },
         allowNull: false,
         field: 'category_id',
       },

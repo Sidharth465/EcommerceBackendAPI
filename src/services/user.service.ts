@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { sequelize } from '../configs/database';
 import { initModels } from '../models';
+import { Transaction } from 'sequelize';
 
 // Initialize models
 const models = initModels(sequelize);
@@ -28,7 +29,7 @@ export class UserService {
   /**
    * Register a new user
    */
-  static async registerUser(userData: CreateUserData): Promise<UserResponse> {
+  static async registerUser(userData: CreateUserData,transaction:Transaction): Promise<UserResponse> {
     const { email, password, name, role = 'customer' } = userData;
 
     // Check if user already exists
@@ -55,7 +56,7 @@ export class UserService {
       firstName,
       lastName,
       role,
-    });
+    },{transaction});
 
     // Return user data without password
     return {
