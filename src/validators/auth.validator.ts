@@ -25,7 +25,7 @@ export const registerSchema = Joi.object({
     'any.required': 'Name is required',
   }),
 
-  role: Joi.string().valid('customer', 'admin').default('customer').messages({
+  role: Joi.string().valid('customer', 'admin',"merchant").default('customer').messages({
     'any.only': 'Role must be either customer or admin',
   }),
 });

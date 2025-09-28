@@ -121,7 +121,6 @@ export class AuthController {
         ip,
         deviceId,
       });
-
       // Return success response
       res.status(200).json({
         success: true,

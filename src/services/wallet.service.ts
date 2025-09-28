@@ -10,7 +10,7 @@ export interface CreateWalletData {
 
 export interface WalletResponse {
   id: string;
-  balance: number;
+  amount: number;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -31,6 +31,30 @@ export class WalletService {
     );
 
 
+    return wallet.get({ plain: true }) as WalletResponse;
+  }
+
+static async addBalanceToWallet(walletId: string, amount: number,transaction: Transaction) {
+    const [affectedRows] = await models.Wallet.update(
+      { amount: sequelize.literal(`amount + ${amount}`) },
+      { where: { id: walletId }, returning: false }
+    );
+    return affectedRows > 0;
+  }
+
+  static async deductBalanceFromWallet(walletId: string, amount: number,transaction: Transaction) {
+    const [affectedRows] = await models.Wallet.update(
+      { amount: sequelize.literal(`amount - ${amount}`) },
+      { where: { id: walletId }, returning: false }
+    );
+    return affectedRows > 0;
+  }
+
+  static async getWalletByUserId(userId: string) {
+    const wallet = await models.Wallet.findOne({
+      where: { userId },
+    });
+    if (!wallet) throw new Error("Wallet not found");
     return wallet.get({ plain: true }) as WalletResponse;
   }
 }

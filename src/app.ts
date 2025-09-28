@@ -6,7 +6,9 @@ import morgan from 'morgan';
 import config from './configs/index';
 import { sequelize } from './configs/database';
 import authRouter from './routers/auth.router';
+import walletRouter from './routers/wallet.route';
 import { setupLogging } from './configs/logger';
+import { API_VERSION } from './utils/constants';
 
 const app = express();
 
@@ -20,7 +22,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Health check endpoint
-app.get('/api/v1/health', async (_req: Request, res: Response) => {
+app.get(`/api/${API_VERSION}/health`, async (_req: Request, res: Response) => {
   try {
     await sequelize.authenticate();
     res.json({
@@ -42,7 +44,10 @@ app.get('/api/v1/health', async (_req: Request, res: Response) => {
 });
 
 // API Routes
-app.use('/api/v1/auth', authRouter);
+app.use(`/api/${API_VERSION}/auth`, authRouter);
+
+// wallet routes
+app.use(`/api/${API_VERSION}/wallet`,walletRouter);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {
